@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Manifest>
   <ID>reze_arms_dealer_vi</ID>
-  <Name>Reze — Thương nhân vũ khí chợ đen</Name>
+  <Name>Reze — Thương nhân chợ đen &amp; súng Kurumi</Name>
   <Author>Reze NPC Project</Author>
-  <ModVersion>1.0.0</ModVersion>
-  <Description>Thêm NPC Reze chuyên bán vũ khí chợ đen: súng, đạn, bom, lựu đạn, chất nổ và vũ khí cận chiến. Toàn bộ hàng hóa Reze bày bán đều được đánh dấu là hàng cấm.</Description>
+  <ModVersion>1.1.0</ModVersion>
+  <Description>Thêm NPC Reze chuyên bán vũ khí chợ đen: súng, đạn, bom, lựu đạn, chất nổ và vũ khí cận chiến. Toàn bộ hàng hóa Reze bày bán đều được đánh dấu là hàng cấm. Có 50% cơ hội bày thêm ngẫu nhiên một trong hai khẩu súng độc quyền của Kurumi nếu mod KurumiWeapons được bật.</Description>
   <GameVersions>
     <Version>1.0.0.6</Version>
   </GameVersions>

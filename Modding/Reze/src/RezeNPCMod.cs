@@ -220,7 +220,51 @@ namespace RezeNPC
             added += AddRandomContrabandStock(ExplosiveCandidates, 2, 3);
             added += AddRandomContrabandStock(MeleeCandidates, 3, 3);
 
+            // 50% chance per visit to offer one Kurumi exclusive firearm.
+            // The two items are equally likely. If the separate item mod is disabled,
+            // this optional stock entry is skipped and Reze's normal shop still works.
+            if (UnityEngine.Random.Range(0, 100) < 50)
+            {
+                string kurumiWeaponId = UnityEngine.Random.Range(0, 2) == 0
+                    ? "kurumi_clockwork_long_rifle"
+                    : "kurumi_clockwork_pistol";
+
+                if (TryAddKurumiWeapon(kurumiWeaponId))
+                    added++;
+            }
+
             _log?.Log(L("log.stock_added").Replace("{0}", added.ToString()));
+        }
+
+        private static bool TryAddKurumiWeapon(string itemId)
+        {
+            try
+            {
+                // Optional integration with the separate KurumiWeapons mod.
+                GameItem item = ModHelper.SpawnItem(itemId);
+                if (item == null || item.identifier != itemId ||
+                    item.unitValue <= 0L || item.unitBaseValue <= 0L)
+                {
+                    _log?.Warning("Kurumi weapon '" + itemId + "' is unavailable or has no valid price.");
+                    return false;
+                }
+
+                ContrabandHelper.InitContrabandItem(item, 3);
+                item.ApplyContrabandFeatureToChildren();
+
+                if (!PlayerStore.Instance.TryAddDirectSellingItemToTable(item))
+                {
+                    _log?.Warning("The store refused Kurumi weapon '" + itemId + "'.");
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _log?.Warning("Optional Kurumi weapon stock skipped ('" + itemId + "'): " + ex.Message);
+                return false;
+            }
         }
 
         private static int AddRandomContrabandStock(string[] candidateIds, int desiredCount, int contrabandLevel)

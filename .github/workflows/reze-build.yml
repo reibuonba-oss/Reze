@@ -3,7 +3,7 @@ name: Build Reze NPC Mod (Probably Stolen 100-Rev6)
 on:
   workflow_dispatch:
   push:
-    branches: [reze-npc-v1]
+    branches: [reze-npc-v1, reze-kurumi-stock-v1]
     paths:
       - "Modding/Reze/**"
       - "Manager.zip"
@@ -78,14 +78,14 @@ jobs:
           Copy-Item (Join-Path $source "Textures") $output -Recurse -Force
           Copy-Item (Join-Path $source "Localization") $output -Recurse -Force
 
-          $zip = Join-Path $env:GITHUB_WORKSPACE "Reze-NPC-Vietnamese.zip"
+          $zip = Join-Path $env:GITHUB_WORKSPACE "Reze-Kurumi-Weapons-Vietnamese.zip"
           if (Test-Path $zip) { Remove-Item $zip -Force }
           Compress-Archive -Path (Join-Path $output "*") -DestinationPath $zip -Force
 
       - name: Upload ready-to-install mod
         uses: actions/upload-artifact@v4
         with:
-          name: Reze-NPC-Vietnamese
-          path: Reze-NPC-Vietnamese.zip
+          name: Reze-Kurumi-Weapons-Vietnamese
+          path: Reze-Kurumi-Weapons-Vietnamese.zip
           if-no-files-found: error
           retention-days: 14

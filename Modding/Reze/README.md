@@ -1,28 +1,17 @@
-# Reze NPC — Probably Stolen 100-Rev6
+# Reze NPC — Black-market Arms Dealer (with Kurumi Weapons)
 
-A standalone Vietnamese NPC merchant mod using the Reze portrait already present in this repository.
+Standalone Vietnamese NPC mod for Probably Stolen 100-Rev6.
 
-## Stock
+## Regular stock
 
-Reze is a black-market seller. Every item placed on her counter is explicitly initialized as contraband (contraband level 3), including items that are not normally contraband in the base game.
+Reze sells random firearms, ammunition, explosives and melee weapons. All stock is marked as contraband (level 3).
 
-- **Firearms:** printed pistol, handmade pistols, receiver, SMG, shotgun, revolver and stun gun.
-- **Ammunition:** .22 SR and 10 mm standard, AP and non-lethal ammunition.
-- **Explosives:** smoke grenade, flashbang, C4 and activated C4.
-- **Melee weapons:** taser, kitchen knife, box cutter, combat knife, cleaver, machete, pipe, stun baton, crowbar, hatchet, glass shiv and skinning knife.
+## Optional Kurumi weapon stock
 
-Each visit stocks a random selection from all four groups: 2 firearms, 3 ammunition items, 2 explosives and 3 melee weapons.
+When the separate `kurumi_weapons` mod is enabled, each Reze visit has a **50% chance** to add one exclusive Kurumi firearm:
+- Kurumi's Antique Long Rifle — base price 1,250 Credit.
+- Kurumi's Antique Pistol — base price 950 Credit.
 
-## Safety against invalid stock
+When a special firearm appears, either item has a 50/50 chance. They are marked contraband like the rest of Reze's stock. The integration is optional; when KurumiWeapons is not installed or active, Reze simply skips this extra item and the normal catalogue continues working.
 
-Items are created with `ItemSpawner.Spawn`, checked for matching ID and positive unit value/base value, marked contraband, and only added after `TryAddDirectSellingItemToTable` confirms acceptance. Invalid or unpriced items are skipped.
-
-## NPC schedule
-
-Reze starts appearing from day 2. Her visit is occasional (45% roll), with a four-day minimum spacing and the game's customer cooldown.
-
-## Build
-
-The GitHub Actions workflow uses the repository's root `Manager.zip` to compile against the game's managed assemblies and produces `Reze-NPC-Vietnamese.zip`.
-
-The DLL build can be verified in CI. In-game appearance, stock generation and actual contraband inspection still require a live game test.
+Install both `Reze` and `KurumiWeapons` mod folders to use the special stock.
