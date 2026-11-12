@@ -1,0 +1,91 @@
+name: Build Reze NPC Mod (Probably Stolen 100-Rev6)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [reze-npc-v1]
+    paths:
+      - "Modding/Reze/**"
+      - "Manager.zip"
+      - ".github/workflows/reze-build.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Reze source
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Validate Reze portrait
+        shell: pwsh
+        run: |
+          $portrait = Join-Path $env:GITHUB_WORKSPACE "Modding/Reze/Textures/reze.png"
+          if (-not (Test-Path $portrait)) { throw "Reze portrait is missing." }
+          if ((Get-Item $portrait).Length -lt 1000) { throw "Reze portrait is too small or invalid." }
+
+      - name: Extract game assemblies
+        shell: pwsh
+        run: |
+          $archive = Join-Path $env:GITHUB_WORKSPACE "Manager.zip"
+          if (-not (Test-Path $archive)) { throw "Missing repository root Manager.zip." }
+
+          $managed = Join-Path $env:RUNNER_TEMP "ProbablyStolen-Managed"
+          New-Item -ItemType Directory -Force -Path $managed | Out-Null
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          [System.IO.Compression.ZipFile]::ExtractToDirectory($archive, $managed, $true)
+
+          $required = @("Assembly-CSharp.dll", "0Harmony.dll", "UnityEngine.dll", "UnityEngine.CoreModule.dll")
+          $managedRoot = $null
+          foreach ($name in $required) {
+            $found = Get-ChildItem -Path $managed -Filter $name -Recurse -File | Select-Object -First 1
+            if (-not $found) { throw "Game assembly missing from Manager.zip: $name" }
+            if ($name -eq "Assembly-CSharp.dll") { $managedRoot = $found.Directory.FullName }
+          }
+
+          foreach ($name in $required) {
+            if (-not (Test-Path (Join-Path $managedRoot $name))) {
+              throw "Required assemblies are not in the same Managed folder: $name"
+            }
+          }
+
+          "MANAGED_DIR=$managedRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Build RezeNPC.dll
+        shell: pwsh
+        run: |
+          dotnet build "Modding/Reze/RezeNPC.csproj" --configuration Release "-p:GameManagedDir=$env:MANAGED_DIR"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Package Reze NPC mod
+        shell: pwsh
+        run: |
+          $source = Join-Path $env:GITHUB_WORKSPACE "Modding/Reze"
+          $output = Join-Path $env:GITHUB_WORKSPACE "dist/Reze"
+          New-Item -ItemType Directory -Force -Path $output | Out-Null
+
+          $dll = Join-Path $source "bin/Release/netstandard2.1/RezeNPC.dll"
+          if (-not (Test-Path $dll)) { throw "Build output missing: RezeNPC.dll" }
+          Copy-Item $dll $output -Force
+          Copy-Item (Join-Path $source "manifest.xml") $output -Force
+          Copy-Item (Join-Path $source "Textures") $output -Recurse -Force
+          Copy-Item (Join-Path $source "Localization") $output -Recurse -Force
+
+          $zip = Join-Path $env:GITHUB_WORKSPACE "Reze-NPC-Vietnamese.zip"
+          if (Test-Path $zip) { Remove-Item $zip -Force }
+          Compress-Archive -Path (Join-Path $output "*") -DestinationPath $zip -Force
+
+      - name: Upload ready-to-install mod
+        uses: actions/upload-artifact@v4
+        with:
+          name: Reze-NPC-Vietnamese
+          path: Reze-NPC-Vietnamese.zip
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Manifest>
+  <ID>reze_arms_dealer_vi</ID>
+  <Name>Reze — Thương nhân vũ khí chợ đen</Name>
+  <Author>Reze NPC Project</Author>
+  <ModVersion>1.0.0</ModVersion>
+  <Description>Thêm NPC Reze chuyên bán vũ khí chợ đen: súng, đạn, bom, lựu đạn, chất nổ và vũ khí cận chiến. Toàn bộ hàng hóa Reze bày bán đều được đánh dấu là hàng cấm.</Description>
+  <GameVersions>
+    <Version>1.0.0.6</Version>
+  </GameVersions>
+  <Prerequisites />
+  <Assemblies>
+    <Assembly>RezeNPC.dll</Assembly>
+  </Assemblies>
+  <Capabilities />
+</Manifest>
