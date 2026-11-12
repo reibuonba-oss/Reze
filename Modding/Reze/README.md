@@ -1,16 +1,14 @@
-# Reze NPC — Stock Fix 1.1.1
+# Reze NPC — Callback Stock Fix 1.1.2
 
-## Fixes
-- Removed the invalid `unitBaseValue > 0` requirement. Ordinary weapons, ammunition, explosives and melee items can have `unitBaseValue = 0`; only `unitValue > 0` is required.
-- Calls `TryAddDirectSellingItemToTable` with `ignorePerk: true`, so the black-market `BM_DISTRUSTED` reputation perk does not silently suppress Reze's contraband stock.
-- The stock callback logs when it fires and logs each skipped/failed item.
-- The optional Kurumi weapon stock uses the same bypass for the faction trust gate.
+## Root fix
+- Build the base customer first with `AddBasicDialog()` and `CompleteClientCreation()`.
+- Attach the custom main dialogue and `SetEndAction(StockReze)` afterwards, so the game cannot replace the stock callback while completing client initialization.
+- Set the mod source with `ModHelper.SetClientSource(client, ModId)`.
 
 ## Stock
-- 2 random firearms
-- 3 random ammunition types
-- 2 random explosives/grenades
-- 3 random melee weapons
-- 50% chance for one additional Kurumi exclusive gun when KurumiWeapons is enabled
+- Firearms, ammunition, explosives/grenades and melee weapons.
+- Optional Kurumi weapon: 50% chance per Reze visit to add one of the two custom Kurumi guns.
+- Each item is initialized as contraband and added through `TryAddDirectSellingItemToTable` with `ignorePerk: true`, bypassing faction distrust suppression.
+- Ordinary firearms/ammunition/melee stock is validated using item ID and `unitValue` only; `unitBaseValue` is not required.
 
-All Reze stock remains marked contraband.
+The callback writes a diagnostic log when it fires and how many items were added.

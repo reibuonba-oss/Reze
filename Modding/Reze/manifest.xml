@@ -3,8 +3,8 @@
   <ID>reze_arms_dealer_vi</ID>
   <Name>Reze — Thương nhân chợ đen &amp; súng Kurumi</Name>
   <Author>Reze NPC Project</Author>
-  <ModVersion>1.1.1</ModVersion>
-  <Description>Thêm NPC Reze chuyên bán vũ khí chợ đen: súng, đạn, bom, lựu đạn, chất nổ và vũ khí cận chiến. Toàn bộ hàng hóa Reze bày bán đều được đánh dấu là hàng cấm. Bản 1.1.1 sửa bộ lọc giá trị vật phẩm và bỏ chặn hàng cấm do perk mất lòng tin phe chợ đen. Có 50% cơ hội bày thêm ngẫu nhiên một trong hai khẩu súng độc quyền của Kurumi nếu mod KurumiWeapons được bật.</Description>
+  <ModVersion>1.1.2</ModVersion>
+  <Description>Thêm NPC Reze chuyên bán vũ khí chợ đen: súng, đạn, bom, lựu đạn, chất nổ và vũ khí cận chiến. Toàn bộ hàng hóa Reze bày bán đều được đánh dấu là hàng cấm. Bản 1.1.2 gắn callback bày hàng sau CompleteClientCreation để game không ghi đè nó khi khởi tạo khách; tiếp tục bỏ chặn hàng cấm bởi perk mất lòng tin. Có 50% cơ hội bày thêm ngẫu nhiên một trong hai khẩu súng độc quyền của Kurumi nếu mod KurumiWeapons được bật.</Description>
   <GameVersions>
     <Version>1.0.0.6</Version>
   </GameVersions>

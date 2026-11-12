@@ -157,6 +157,14 @@ namespace RezeNPC
                 cooldown = 5
             };
 
+            // Complete client initialization first: it may rebuild main-dialogue actions.
+            // Attach StockReze only after CompleteClientCreation so the end action survives.
+            client.AddBasicDialog();
+            client.CompleteClientCreation();
+            ModHelper.SetClientSource(client, ModId);
+
+            client.acceptDealDialogue.SetText(client.displayName, L("reze.accept"));
+            client.allDoneDialogue.SetText(client.displayName, L("reze.goodbye"));
             client.mainDialogue
                 .SetText(client.displayName, L("reze.seller.1"))
                 .NextDialogue()
@@ -164,11 +172,6 @@ namespace RezeNPC
                 .NextDialogue()
                 .SetText(client.displayName, L("reze.seller.3"))
                 .SetEndAction(StockReze);
-
-            client.AddBasicDialog();
-            client.acceptDealDialogue.SetText(client.displayName, L("reze.accept"));
-            client.allDoneDialogue.SetText(client.displayName, L("reze.goodbye"));
-            client.CompleteClientCreation();
             return client;
         }
 
