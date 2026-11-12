@@ -212,8 +212,12 @@ namespace RezeNPC
         private static void StockReze()
         {
             if (PlayerStore.Instance == null)
+            {
+                _log?.Warning("Reze stock was not created because PlayerStore is not ready.");
                 return;
+            }
 
+            _log?.Log("Reze stock callback fired; creating counter stock.");
             int added = 0;
             added += AddRandomContrabandStock(FirearmCandidates, 2, 3);
             added += AddRandomContrabandStock(AmmunitionCandidates, 3, 3);
@@ -242,8 +246,10 @@ namespace RezeNPC
             {
                 // Optional integration with the separate KurumiWeapons mod.
                 GameItem item = ModHelper.SpawnItem(itemId);
+                // unitBaseValue is only used by special power-source items. Ordinary
+                // weapons, ammunition and melee items legitimately have unitBaseValue = 0.
                 if (item == null || item.identifier != itemId ||
-                    item.unitValue <= 0L || item.unitBaseValue <= 0L)
+                    item.unitValue <= 0L)
                 {
                     _log?.Warning("Kurumi weapon '" + itemId + "' is unavailable or has no valid price.");
                     return false;
@@ -252,7 +258,10 @@ namespace RezeNPC
                 ContrabandHelper.InitContrabandItem(item, 3);
                 item.ApplyContrabandFeatureToChildren();
 
-                if (!PlayerStore.Instance.TryAddDirectSellingItemToTable(item))
+                // Reze is a black-market seller. Ignore BM_DISTRUSTED/LLDISTRUSTED
+                // stock-gating perks so her advertised contraband is still offered.
+                if (!PlayerStore.Instance.TryAddDirectSellingItemToTable(
+                    item, isOwend: false, isStolen: false, ignorePerk: true, forcedHeat: 0))
                 {
                     _log?.Warning("The store refused Kurumi weapon '" + itemId + "'.");
                     return false;
@@ -297,8 +306,10 @@ namespace RezeNPC
                 // can return a directory template or an unresolved placeholder.
                 GameItem item = ItemSpawner.Spawn(id);
 
+                // unitBaseValue is reserved for special power sources; standard stock
+                // items such as guns, bullets, grenades and knives normally leave it at 0.
                 if (item == null || item.identifier != id ||
-                    item.unitValue <= 0L || item.unitBaseValue <= 0L)
+                    item.unitValue <= 0L)
                 {
                     _log?.Warning("Rejected Reze stock '" + id + "': invalid item or zero value.");
                     return false;
@@ -309,7 +320,10 @@ namespace RezeNPC
                 ContrabandHelper.InitContrabandItem(item, contrabandLevel);
                 item.ApplyContrabandFeatureToChildren();
 
-                if (!PlayerStore.Instance.TryAddDirectSellingItemToTable(item))
+                // Skip the faction distrust gate: Reze is specifically the player's
+                // black-market weapons supplier and must be able to offer contraband.
+                if (!PlayerStore.Instance.TryAddDirectSellingItemToTable(
+                    item, isOwend: false, isStolen: false, ignorePerk: true, forcedHeat: 0))
                 {
                     _log?.Warning("The store refused Reze stock '" + id + "'.");
                     return false;

@@ -7,3 +7,5 @@ reze.goodbye,"Hẹn gặp lại. Đừng để cảnh sát lần theo anh."
 log.portrait_missing,"Không tìm thấy ảnh chân dung Reze trong thư mục Textures."
 log.stock_missing,"Không tìm thấy vật phẩm hợp lệ trong nhóm hàng: {0}."
 log.stock_added,"Reze đã bày {0} món hàng cấm lên quầy."
+
+log.stock_callback,"Reze bắt đầu tạo hàng trên quầy."

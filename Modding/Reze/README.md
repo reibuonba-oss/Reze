@@ -1,17 +1,16 @@
-# Reze NPC — Black-market Arms Dealer (with Kurumi Weapons)
+# Reze NPC — Stock Fix 1.1.1
 
-Standalone Vietnamese NPC mod for Probably Stolen 100-Rev6.
+## Fixes
+- Removed the invalid `unitBaseValue > 0` requirement. Ordinary weapons, ammunition, explosives and melee items can have `unitBaseValue = 0`; only `unitValue > 0` is required.
+- Calls `TryAddDirectSellingItemToTable` with `ignorePerk: true`, so the black-market `BM_DISTRUSTED` reputation perk does not silently suppress Reze's contraband stock.
+- The stock callback logs when it fires and logs each skipped/failed item.
+- The optional Kurumi weapon stock uses the same bypass for the faction trust gate.
 
-## Regular stock
+## Stock
+- 2 random firearms
+- 3 random ammunition types
+- 2 random explosives/grenades
+- 3 random melee weapons
+- 50% chance for one additional Kurumi exclusive gun when KurumiWeapons is enabled
 
-Reze sells random firearms, ammunition, explosives and melee weapons. All stock is marked as contraband (level 3).
-
-## Optional Kurumi weapon stock
-
-When the separate `kurumi_weapons` mod is enabled, each Reze visit has a **50% chance** to add one exclusive Kurumi firearm:
-- Kurumi's Antique Long Rifle — base price 1,250 Credit.
-- Kurumi's Antique Pistol — base price 950 Credit.
-
-When a special firearm appears, either item has a 50/50 chance. They are marked contraband like the rest of Reze's stock. The integration is optional; when KurumiWeapons is not installed or active, Reze simply skips this extra item and the normal catalogue continues working.
-
-Install both `Reze` and `KurumiWeapons` mod folders to use the special stock.
+All Reze stock remains marked contraband.
